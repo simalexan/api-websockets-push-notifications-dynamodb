@@ -7,12 +7,12 @@ This is a serverless component consisting of:
 
 - an API Gateway with Websockets, that handles connections with clients
 - On Connect Lambda function, that's invoked when a client connects and stores that to
-- a Connections DynamoDB table, where all of our client connections are stored
+- a `Connections` DynamoDB table, where all of our client connections are stored
 - On Disconnect Lambda function, that's invoked when a client disconnects and delets that connection from the Connections DynamoDB table
 - Push Notifications Lambda function, that's pushing a notification to all of the clients invoked when an Notification Event is stored into
-- a NotificationEvents DynamoDB table, in which you can store events that are happening throughout your application and they will be pushed as notifications towards the application users
+- a `NotificationEvents` DynamoDB table, in which you can store events that are happening throughout your application and they will be pushed as notifications towards the application users
 
-Aside from this main functionality, its important features are:
+_Aside from this main functionality, its important features are:_
 
 - Supports CORS
 - Written in Node.js
