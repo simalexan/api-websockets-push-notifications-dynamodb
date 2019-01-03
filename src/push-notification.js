@@ -1,5 +1,7 @@
 const AWS = require('aws-sdk'),
   dynamoDb = new AWS.DynamoDB.DocumentClient(),
+  processResponse = require('process-response'),
+
   { TABLE_NAME } = process.env;
 
 // Add ApiGatewayManagementApi to the AWS namespace
@@ -9,9 +11,9 @@ exports.handler = async (event, context) => {
   let connectionData;
 
   try {
-    connectionData = await dynamoDB.scan({ TableName: TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
+    connectionData = await dynamoDb.scan({ TableName: TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
   } catch (e) {
-    return { statusCode: 500, body: e.stack };
+    return processResponse(true, e.stack, 500);
   }
 
   const apigwManagementApi = new AWS.ApiGatewayManagementApi({
@@ -27,7 +29,7 @@ exports.handler = async (event, context) => {
     } catch (e) {
       if (e.statusCode === 410) {
         console.log(`Found stale connection, deleting ${connectionId}`);
-        await dynamoDB.deleteItem({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+        await dynamoDb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
       } else {
         throw e;
       }
@@ -37,8 +39,8 @@ exports.handler = async (event, context) => {
   try {
     await Promise.all(postCalls);
   } catch (e) {
-    return { statusCode: 500, body: e.stack };
+    return processResponse(true, e.stack, 500);
   }
 
-  return { statusCode: 200, body: 'Data sent.' };
+  return processResponse(true, 'Data sent.', 200);
 };

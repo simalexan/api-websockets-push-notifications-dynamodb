@@ -10,6 +10,8 @@ exports.handler = (event) => {
     }
   };
 
+  key[PRIMARY_KEY] = requestedItemId;
+
   dynamoDb.delete(deleteParams).promise()
     .then(response => processResponse(true, {}, 200))
     .catch(error => {
