@@ -6,13 +6,14 @@ exports.handler = (event) => {
   var deleteParams = {
     TableName: process.env.TABLE_NAME,
     Key: {
-      connectionId: { S: event.requestContext.connectionId }
+      connectionId: event.requestContext.connectionId
     }
   };
 
-  dynamoDb.delete(deleteParams).promise()
+  return dynamoDb.delete(deleteParams).promise()
     .then(response => processResponse(true, {}, 200))
     .catch(error => {
+      console.log(error);
       return processResponse(true, error, 400);
     });
 };

@@ -1,5 +1,5 @@
 {
-  "name": "api-websockets-push-notifications-lambda-dynamodb",
+  "name": "api-websockets-push-notifications-dynamodb",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,9 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "aws cloudformation package --template-file template.yml --output-template-file output.yml --s3-bucket api-websockets-push-notifications-dynamodb",
-    "deploy": "aws cloudformation deploy --template-file output.yml --stack-name api-websockets-push-notifications-dynamodb --capabilities CAPABILITY_IAM",
-    "qd": "npm run package && npm run deploy",
-    "deploy:test": "aws cloudformation deploy --template-file output.yml --stack-name api-websockets-push-notifications-dynamodb --capabilities CAPABILITY_IAM --parameter-overrides StageName=$npm_package_config_stage_name DomainName=$npm_package_config_domain_name"    
+    "deploy": "aws cloudformation deploy --template-file output.yml --stack-name api-websockets-push-notifications-dynamodb --capabilities CAPABILITY_IAM --parameter-overrides StageName=$npm_package_config_stage_name DomainName=$npm_package_config_domain_name",
+    "qd": "npm run package && npm run deploy"
   },
   "keywords": [],
   "author": "Aleksandar Simovic <alexander.simovic@gmail.com>",
