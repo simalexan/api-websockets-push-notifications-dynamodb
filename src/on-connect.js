@@ -6,7 +6,7 @@ exports.handler = (event) => {
   const connection = {
     TableName: process.env.TABLE_NAME,
     Item: {
-      connectionId: { S: event.requestContext.connectionId }
+      connectionId: event.requestContext.connectionId
     }
   };
 

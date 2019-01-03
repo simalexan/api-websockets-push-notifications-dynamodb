@@ -70,7 +70,8 @@ Resources:
       Runtime: nodejs8.10
       Environment:
         Variables:
-          TABLE_NAME: !Ref NotificationEventsTable
+          CONNECTIONS_TABLE_NAME: !Ref ConnectionsTableName
+          NOTIFICATIONS_TABLE_NAME: !Ref NotificationEventsTableName
       Events:
         DynamoDBStream:
           Type: DynamoDB

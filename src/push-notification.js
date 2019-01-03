@@ -1,48 +1,53 @@
-const AWS = require('aws-sdk'),
-  dynamoDb = new AWS.DynamoDB.DocumentClient(),
-  processResponse = require('process-response'),
-
-  { TABLE_NAME } = process.env;
+const AWS = require('aws-sdk');
 
 // Add ApiGatewayManagementApi to the AWS namespace
-require('aws-sdk/clients/apigatewaymanagementapi'),
+require('aws-sdk/clients/apigatewaymanagementapi');
 
-exports.handler = async (event, context) => {
-  let connectionData;
+const dynamoDb = new AWS.DynamoDB.DocumentClient(),
+  processResponse = require('process-response'),
+  { CONNECTIONS_TABLE_NAME, NOTIFICATIONS_TABLE_NAME } = process.env;
 
-  try {
-    connectionData = await dynamoDb.scan({ TableName: TABLE_NAME, ProjectionExpression: 'connectionId' }).promise();
-  } catch (e) {
-    return processResponse(true, e.stack, 500);
-  }
 
-  const apigwManagementApi = new AWS.ApiGatewayManagementApi({
-    apiVersion: '2018-11-29',
-    endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
-  });
-
-  console.log('HERE is the Event');
+exports.handler = (event, context) => {
+  console.log('hello from the PUSH NOTIFicATION?');
   console.log(event);
-  const postData = JSON.parse(event.body).data;
 
-  const postCalls = connectionData.Items.map(async ({ connectionId }) => {
-    try {
-      await apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise();
-    } catch (e) {
-      if (e.statusCode === 410) {
-        console.log(`Found stale connection, deleting ${connectionId}`);
-        await dynamoDb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
-      } else {
-        throw e;
-      }
-    }
-  });
+  return dynamoDb.scan({ TableName: CONNECTIONS_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise()
+    .then(result => {
+      let connectionData = result;
+      console.log(result);
 
-  try {
-    await Promise.all(postCalls);
-  } catch (e) {
-    return processResponse(true, e.stack, 500);
-  }
+      const apigwManagementApi = new AWS.ApiGatewayManagementApi({
+        apiVersion: '2018-11-29',
+        endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
+      });
 
-  return processResponse(true, 'Data sent.', 200);
+      console.log('EVENT BODy');
+      console.log(event.body);
+
+      const postData = JSON.parse(event.body).data;
+
+      console.log(postData);
+
+      const postCalls = connectionData.Items.map(({ connectionId }) => {
+        console.log('connection ID');
+        console.log(connectionId);
+        return apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise()
+          .catch(postError => {
+            if (e.statusCode === 410) {
+              console.log(`Found stale connection, deleting ${connectionId}`);
+             return dynamoDb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+            } else {
+              throw e;
+            }
+          });
+      });
+      return Promise.all(postCalls);
+    }).then(responses => {
+      console.log('SUCCESS');
+      return processResponse(true, 'Data sent.', 200);
+    }).catch(err => {
+      console.log(err);
+      return processResponse(true, err.stack, 500);
+    });
 };
