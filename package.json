@@ -17,6 +17,6 @@
   "license": "MIT",
   "config": {
     "stage_name": "prod",
-    "domain_name": "gegxb1gz7a.execute-api.us-east-1.amazonaws.com"
+    "domain_name": "<YOUR-API-ID>.execute-api.<YOUR-API-REGION>.amazonaws.com"
   }
 }

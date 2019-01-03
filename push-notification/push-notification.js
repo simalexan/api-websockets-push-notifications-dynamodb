@@ -11,7 +11,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient(),
     endpoint: DOMAIN_NAME + '/' + STAGE_NAME
   });
 
-exports.handler = (event, context) => {
+exports.handler = (event) => {
   const newEvents = parseDynamoDBNewImageEvent(event);
   return dynamoDb.scan({ TableName: CONNECTIONS_TABLE_NAME, ProjectionExpression: 'connectionId' }).promise()
     .then(result => {
