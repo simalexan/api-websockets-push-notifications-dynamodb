@@ -5,7 +5,7 @@ require('aws-sdk/clients/apigatewaymanagementapi');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient(),
   processResponse = require('process-response'),
-  { CONNECTIONS_TABLE_NAME, NOTIFICATIONS_TABLE_NAME } = process.env;
+  { CONNECTIONS_TABLE_NAME, NOTIFICATIONS_TABLE_NAME, STAGE_NAME, DOMAIN_NAME } = process.env;
 
 
 exports.handler = (event, context) => {
@@ -19,7 +19,7 @@ exports.handler = (event, context) => {
 
       const apigwManagementApi = new AWS.ApiGatewayManagementApi({
         apiVersion: '2018-11-29',
-        endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
+        endpoint: DOMAIN_NAME + '/' + STAGE_NAME
       });
 
       console.log('EVENT BODy');

@@ -1,8 +1,19 @@
 AWSTemplateFormatVersion: 2010-09-09
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  api-websockets-push-notifications-lambda-dynamodb
+  api-websockets-push-notifications-dynamodb
 Parameters:
+  StageName:
+    Type: String
+    Default: prod
+    Description: (Required) The name of your existing WebSocket API Gateway Stage. Minimum 3 characters. Mind the casing.
+    MinLength: 3
+    ConstraintDescription: 'Required'
+  DomainName:
+    Type: String
+    Description: (Required) The Domain Name of your existing WebSocket API Gateway. Minimum 3 characters. Mind the casing.
+    MinLength: 3
+    ConstraintDescription: 'Required'
   ConnectionsTableName:
     Type: String
     Default: notifications-clients
@@ -72,6 +83,8 @@ Resources:
         Variables:
           CONNECTIONS_TABLE_NAME: !Ref ConnectionsTableName
           NOTIFICATIONS_TABLE_NAME: !Ref NotificationEventsTableName
+          STAGE_NAME: !Ref StageName
+          DOMAIN_NAME: !Ref DomainName
       Events:
         DynamoDBStream:
           Type: DynamoDB
