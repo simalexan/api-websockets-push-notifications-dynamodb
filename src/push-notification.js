@@ -36,7 +36,7 @@ exports.handler = (event, context) => {
           .catch(errorPosting => {
             if (errorPosting.statusCode === 410) {
               console.log(`Found stale connection, deleting ${connectionId}`);
-             return dynamoDb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
+             return dynamoDb.delete({ TableName: CONNECTIONS_TABLE_NAME, Key: { connectionId } }).promise();
             } else {
               throw errorPosting;
             }
