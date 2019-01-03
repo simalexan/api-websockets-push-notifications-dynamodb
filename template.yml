@@ -35,7 +35,7 @@ Resources:
   OnConnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/
+      CodeUri: on-connect/
       Handler: on-connect.handler
       Runtime: nodejs8.10
       Environment:
@@ -48,7 +48,7 @@ Resources:
   OnDisconnectFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/
+      CodeUri: on-disconnect/
       Handler: on-disconnect.handler
       Runtime: nodejs8.10
       Environment:
@@ -75,14 +75,13 @@ Resources:
   PushNotifications:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: src/
+      CodeUri: push-notification/
       Handler: push-notification.handler
       MemorySize: 256
       Runtime: nodejs8.10
       Environment:
         Variables:
           CONNECTIONS_TABLE_NAME: !Ref ConnectionsTableName
-          NOTIFICATIONS_TABLE_NAME: !Ref NotificationEventsTableName
           STAGE_NAME: !Ref StageName
           DOMAIN_NAME: !Ref DomainName
       Events:

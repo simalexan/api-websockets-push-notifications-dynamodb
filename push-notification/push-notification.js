@@ -4,8 +4,7 @@ const AWS = require('aws-sdk');
 require('aws-sdk/clients/apigatewaymanagementapi');
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient(),
-  processResponse = require('process-response'),
-  { CONNECTIONS_TABLE_NAME, NOTIFICATIONS_TABLE_NAME, STAGE_NAME, DOMAIN_NAME } = process.env;
+  { CONNECTIONS_TABLE_NAME, STAGE_NAME, DOMAIN_NAME } = process.env;
 
 
 exports.handler = (event, context) => {
@@ -45,9 +44,13 @@ exports.handler = (event, context) => {
       return Promise.all(postCalls);
     }).then(responses => {
       console.log('SUCCESS');
-      return processResponse(true, 'Data sent.', 200);
+      return processResponse(200, 'Data sent');
     }).catch(err => {
       console.log(err);
-      return processResponse(true, err.stack, 500);
+      return processResponse(500, err.stack);
     });
 };
+
+function processResponse(statusCode, data) {
+  return { statusCode, body: JSON.stringify(data) };
+}
