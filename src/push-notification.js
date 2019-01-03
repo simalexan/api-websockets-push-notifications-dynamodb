@@ -33,12 +33,12 @@ exports.handler = (event, context) => {
         console.log('connection ID');
         console.log(connectionId);
         return apigwManagementApi.postToConnection({ ConnectionId: connectionId, Data: postData }).promise()
-          .catch(postError => {
-            if (e.statusCode === 410) {
+          .catch(errorPosting => {
+            if (errorPosting.statusCode === 410) {
               console.log(`Found stale connection, deleting ${connectionId}`);
              return dynamoDb.delete({ TableName: TABLE_NAME, Key: { connectionId } }).promise();
             } else {
-              throw e;
+              throw errorPosting;
             }
           });
       });
