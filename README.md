@@ -1,5 +1,10 @@
 
-# Api Gateway (Websockets) Push Notifications -> DynamoDB
+# Api Gateway (Websockets) Push Notifications -> Lambda -> DynamoDB
+
+## How to set this component up
+
+1. Create a WebSocket Api described in [Announcing WebSocket APIs in Amazon API Gateway](https://aws.amazon.com/blogs/compute/announcing-websocket-apis-in-amazon-api-gateway)
+2. Deploy this component and provide the Domain Name and the Stage of your newly created Websocket API.
 
 ## Description
 
