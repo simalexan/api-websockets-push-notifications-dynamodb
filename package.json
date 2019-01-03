@@ -7,9 +7,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "aws cloudformation package --template-file template.yml --output-template-file output.yml --s3-bucket api-websockets-push-notifications-dynamodb",
+    "deploy": "aws cloudformation deploy --template-file output.yml --stack-name api-websockets-push-notifications-dynamodb --capabilities CAPABILITY_IAM",
+    "qd": "npm run package && npm run deploy"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Aleksandar Simovic <alexander.simovic@gmail.com>",
+  "license": "MIT"
 }

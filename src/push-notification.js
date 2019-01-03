@@ -5,7 +5,7 @@ const AWS = require('aws-sdk'),
   { TABLE_NAME } = process.env;
 
 // Add ApiGatewayManagementApi to the AWS namespace
-require('aws-sdk/clients/apigatewaymanagementapi');
+require('aws-sdk/clients/apigatewaymanagementapi'),
 
 exports.handler = async (event, context) => {
   let connectionData;
@@ -21,6 +21,8 @@ exports.handler = async (event, context) => {
     endpoint: event.requestContext.domainName + '/' + event.requestContext.stage
   });
 
+  console.log('HERE is the Event');
+  console.log(event);
   const postData = JSON.parse(event.body).data;
 
   const postCalls = connectionData.Items.map(async ({ connectionId }) => {

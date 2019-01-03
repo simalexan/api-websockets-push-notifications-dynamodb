@@ -9,7 +9,7 @@ Parameters:
     Description: (Required) The name of the new DynamoDB to store connection identifiers for each connected clients. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
-    AllowedPattern: ^[A-Za-z_]+$
+    AllowedPattern: ^[A-Za-z_-]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
   NotificationEventsTableName:
     Type: String
@@ -17,7 +17,7 @@ Parameters:
     Description: (Required) The name of the new DynamoDB to store notification events, on every new entry the connections will be notified. Minimum 3 characters
     MinLength: 3
     MaxLength: 50
-    AllowedPattern: ^[A-Za-z_]+$
+    AllowedPattern: ^[A-Za-z_-]+$
     ConstraintDescription: 'Required. Can be characters and underscore only. No numbers or special characters allowed.'
 
 Resources:
@@ -65,7 +65,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: src/
-      Handler: push-notifications.handler
+      Handler: push-notification.handler
       MemorySize: 256
       Runtime: nodejs8.10
       Environment:
